@@ -53,11 +53,19 @@ def comment_list(request):
 (<id>는 board에 대한 id(pk)값
 """
 
+# (*args, **kwargs)
+
 
 def board_detail(request, board_id):
     qs = Board.objects.get(id=board_id)
+    comment_list = qs.comment_set.all()
 
     html = f"<h1>{qs.title}</h1> \
-        <div>{board.content}</div>"
+        <div>{qs.content}</div>"
+
+    html += "<ul>"
+    for comment in comment_list:
+        html += f"<li>{comment.content}</li>"
+    html += "</ul>"
 
     return HttpResponse(html)

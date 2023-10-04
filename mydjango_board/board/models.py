@@ -14,7 +14,8 @@ class Board(models.Model):
 
 class Comment(models.Model):
     content = models.CharField(max_length=255)
-    board = models.ForeignKey("Board", on_delete=models.SET_NULL, null=True)
+    board = models.ForeignKey("Board", on_delete=models.SET_NULL,
+                              null=True,)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
