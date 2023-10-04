@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 
-from .models import Board
+from .models import Board, Comment
 
 
 def index(request):
@@ -18,7 +18,28 @@ def board_list(request):
 
     html = ""
     for board in qs:
-        html += "<li>{board.title}</li>"
+        html += f"<li>{board.title}</li>"
+    html = f"<ul>{html}</ul>"
+
+    return HttpResponse(html)
+
+
+"""/board/comments로 접속하면 모든 댓글을 조회하도록 해주세요. 
+    조회내용에 대한 형식은 다음과 같습니다.
+    (<ul> 
+    <li>코멘트id | 댓글내용 | board_id </li>
+    …
+    </ul>)
+"""
+
+
+def comment_list(request):
+    qs = Comment.objects.all()
+
+    html = ""
+    for comment in qs:
+        html += f"<li>{comment.id} | \
+            {comment.content} | {comment.board_id} </li>"
     html = f"<ul>{html}</ul>"
 
     return HttpResponse(html)
