@@ -18,7 +18,9 @@ def board_list(request):
 
     html = ""
     for board in qs:
-        html += f"<li>{board.title}</li>"
+        html += f"<li><a href='/board/{board.id}'>\
+            {board.title}\
+                </a></li>"
     html = f"<ul>{html}</ul>"
 
     return HttpResponse(html)
@@ -41,5 +43,21 @@ def comment_list(request):
         html += f"<li>{comment.id} | \
             {comment.content} | {comment.board_id} </li>"
     html = f"<ul>{html}</ul>"
+
+    return HttpResponse(html)
+
+
+"""
+각 게시글을 클릭 가능하게 해주시고, 
+클릭에 대한 url은 /board/<id> 로 해주세요. 
+(<id>는 board에 대한 id(pk)값
+"""
+
+
+def board_detail(request, board_id):
+    qs = Board.objects.get(id=board_id)
+
+    html = f"<h1>{qs.title}</h1> \
+        <div>{board.content}</div>"
 
     return HttpResponse(html)
