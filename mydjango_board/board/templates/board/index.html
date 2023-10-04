@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <h1>홈화면</h1>
+    <p>안녕하세요
+      {{ name }}님
+    </p>
+
+    <ul>
+      {% for i in sample %}
+        {% if i|divisibleby:3 %}
+        
+        {% else %}
+          <li>
+
+              {% comment %} 3의 배수는 출력하지 않도록 하세요. {% endcomment %}
+            순서 :
+            {{ i }}
+          </li>
+        {% endif %}
+      {% endfor %}
+
+    </ul>
+  </body>
+
+</html>

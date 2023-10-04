@@ -1,10 +1,15 @@
 from django.http import HttpResponse
+from django.shortcuts import render
 
 from .models import Board, Comment
 
 
 def index(request):
-    return HttpResponse("Hello World, I am Younsoo!")
+    # return HttpResponse("Hello World, I am Younsoo!")
+    sample_list = range(10)
+
+    return render(request, 'board/index.html',
+                  {'name': '유저', 'sample': sample_list})
 
 
 """
