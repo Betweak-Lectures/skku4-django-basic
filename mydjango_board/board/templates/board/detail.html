@@ -1,0 +1,12 @@
+{% extends './base.html' %}
+{% block main %}
+  <div class="container">
+    <h3>상세 게시글</h3>
+
+    <h5>{{ board.title }}</h5>
+
+    <div>
+      {{ board.content }}
+    </div>
+  </div>
+{% endblock %}
