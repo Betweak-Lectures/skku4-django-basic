@@ -21,8 +21,7 @@ def board_detail(request, board_id):
 
 def board_write(request):
     return render(request,
-                  "board/write.html",
-                  {'board'})
+                  "board/write.html",)
 
 
 # def index(request):
