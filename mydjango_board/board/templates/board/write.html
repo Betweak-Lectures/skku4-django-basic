@@ -1,17 +1,22 @@
 {% extends "./base.html" %}
 {% block main %}
   <div class="container">
-    <form action="">
-      <div class="mb-3">
-        <label for="title" class="form-label">
-          제목
-        </label>
-        <input type="text" class="form-control" id="title" placeholder="제목">
-      </div>
-      <div class="mb-3">
-        <label for="content" class="form-label">내용</label>
-        <textarea class="form-control" id="content" rows="5"></textarea>
-      </div>
+    <form action="" method="POST">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div class="fieldWrapper m-2">
+          {{ field.label_tag }}
+          {{ field }}
+
+          {% for error in field.errors %}
+            <div id="content-help" class="form-text text-danger">
+              {{ field.errors }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
       <button type="submit">제출</button>
     </form>
   </div>

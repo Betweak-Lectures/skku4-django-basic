@@ -1,3 +1,6 @@
+from .forms import BoardForm
+from django.urls import reverse
+from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -20,9 +23,35 @@ def board_detail(request, board_id):
 
 
 def board_write(request):
-    return render(request,
-                  "board/write.html",)
+    form = BoardForm()
+    if request.method == 'POST':
+        form = BoardForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('board:index'))
 
+    return render(request,
+                  "board/write.html",
+                  {'form': form})
+
+
+# def board_write(request):
+#     if request.method == 'POST':
+#         # save model
+#         data = request.POST
+#         title = data.get('title')
+#         content = data.get('content')
+#         board = Board(
+#             title=title,
+#             content=content,
+#             author=request.user
+#         )
+#         board.save()
+#         # 문제 X -> index페이지로 이동
+
+#         return redirect(reverse('board:index'))
+#     return render(request,
+#                   "board/write.html",)
 
 # def index(request):
 #     # return HttpResponse("Hello World, I am Younsoo!")
