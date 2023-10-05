@@ -5,11 +5,15 @@ from .models import Board, Comment
 
 
 def index(request):
-    # return HttpResponse("Hello World, I am Younsoo!")
-    sample_list = range(10)
+    board_list = Board.objects.all()
+    return render(request, "board/index.html", {'board_list': board_list})
 
-    return render(request, 'board/index.html',
-                  {'name': '유저', 'sample': sample_list})
+# def index(request):
+#     # return HttpResponse("Hello World, I am Younsoo!")
+#     sample_list = range(10)
+
+#     return render(request, 'board/index.html',
+#                   {'name': '유저', 'sample': sample_list})
 
 
 """
