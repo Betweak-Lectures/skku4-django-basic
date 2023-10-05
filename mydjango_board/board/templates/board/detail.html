@@ -3,10 +3,22 @@
   <div class="container">
     <h3>상세 게시글</h3>
 
-    <h5>{{ board.title }}</h5>
+    <div class="my-5">
+      <div class="my-2">
+        <h5>{{ board.title }}</h5>
+      </div>
 
-    <div>
-      {{ board.content }}
+      <div style="border:1px solid black; padding:2px; min-height:200px;">
+        {{ board.content }}
+      </div>
+    </div>
+
+    <div class="my-4">
+      <ul class="list-group">
+        {% for comment in board.comment_set.all %}
+          <li class="list-group-item">{{ comment.content }}</li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
 {% endblock %}
