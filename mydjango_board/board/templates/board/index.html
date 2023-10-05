@@ -10,7 +10,9 @@
               <div class="fw-bold">{{ board.title }}</div>
               {{board.content}}
             </div>
-            <span class="badge bg-primary rounded-pill">14</span>
+            <span class="badge bg-primary rounded-pill">
+              {{board.comment_set.all|length}}
+            </span>
           </li>
         </a>
       {% endfor %}

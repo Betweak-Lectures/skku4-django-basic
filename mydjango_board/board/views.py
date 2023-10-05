@@ -5,7 +5,8 @@ from .models import Board, Comment
 
 
 def index(request):
-    board_list = Board.objects.all()
+    board_list = Board.objects.prefetch_related('comment_set').all()
+
     return render(request, "board/index.html",
                   {'board_list': board_list})
 
@@ -16,6 +17,13 @@ def board_detail(request, board_id):
     return render(request,
                   "board/detail.html",
                   {'board': board})
+
+
+def board_write(request):
+    return render(request,
+                  "board/write.html",
+                  {'board'})
+
 
 # def index(request):
 #     # return HttpResponse("Hello World, I am Younsoo!")
