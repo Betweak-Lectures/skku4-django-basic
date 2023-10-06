@@ -1,4 +1,20 @@
 from django.http import HttpResponse
+from django.http import HttpResponse
+from django.shortcuts import render
+
+
+# Create your views here.
+def index(request):
+    # print(request.user)
+    print(request.session)
+    print("session 확인")
+    for k, v in request.session.items():
+        print(k, v)
+
+    print("Cookie 확인")
+    history = request.COOKIES.get('board_history')
+    print(history)
+    return render(request, 'user/profile.html')
 
 
 def profile(request):

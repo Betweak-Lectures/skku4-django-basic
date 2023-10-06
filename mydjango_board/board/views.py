@@ -1,3 +1,5 @@
+import json
+
 from django.http import Http404
 from .forms import CommentForm
 from .forms import BoardForm
@@ -29,6 +31,12 @@ def index(request):
 
 def board_detail(request, board_id):
     board = Board.objects.get(pk=board_id)
+
+    board_history = request.session.get('board_history')
+    if not board_history:
+        request.session['board_history'] = []
+    request.session['board_history'] += [board_id]
+
     if not (board and board.is_active):
         return Http404("요청하신 페이지가 없습니다.")
 
@@ -45,9 +53,19 @@ def board_detail(request, board_id):
             return redirect(reverse('board:detail',
                                     kwargs={'board_id': board_id}))
 
-    return render(request,
+    resp = render(request,
                   "board/detail.html",
                   {'board': board, 'form': form})
+
+    history = request.COOKIES.get('board_history')
+    if not history:
+        history = []
+        history = json.dumps(history)
+    history = json.loads(history)
+    history += [board_id]
+    resp.set_cookie('board_history', json.dumps(history))
+
+    return resp
 
 
 # def board_detail(request, board_id):
