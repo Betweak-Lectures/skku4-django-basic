@@ -1,3 +1,4 @@
+from .forms import CommentForm
 from .forms import BoardForm
 from django.urls import reverse
 from django.shortcuts import redirect
@@ -26,30 +27,26 @@ def index(request):
 
 
 def board_detail(request, board_id):
-    errors = []
-    if request.method == 'POST':
-        data = request.POST
-        content = data.get('comment')
-        if content:
-            comment = Comment(
-                content=content,
-                board_id=board_id
-            )
-            comment.save()
-        else:
-            errors.append("comment가 비어 있습니다.")
-
     board = Board.objects.get(pk=board_id)
+    form = CommentForm()
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            Comment(
+                content=data['content'],
+                board_id=board_id
+            ).save()
+            return redirect(reverse('board:detail',
+                                    kwargs={'board_id': board_id}))
 
     return render(request,
                   "board/detail.html",
-                  {'board': board, 'errors': errors})
+                  {'board': board, 'form': form})
 
 
 # def board_detail(request, board_id):
-
-#     board = Board.objects.get(pk=board_id)
-
 #     errors = []
 #     if request.method == 'POST':
 #         data = request.POST
@@ -62,6 +59,8 @@ def board_detail(request, board_id):
 #             comment.save()
 #         else:
 #             errors.append("comment가 비어 있습니다.")
+
+#     board = Board.objects.get(pk=board_id)
 
 #     return render(request,
 #                   "board/detail.html",
@@ -78,6 +77,13 @@ def board_write(request):
 
     return render(request,
                   "board/write.html",
+                  {'form': form})
+
+
+def board_edit(request, board_id):
+    form = BoardForm()
+    return render(request,
+                  "board/edit.html",
                   {'form': form})
 
 
