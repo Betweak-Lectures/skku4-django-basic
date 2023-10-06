@@ -6,6 +6,17 @@ from django.shortcuts import render
 
 from .models import Board, Comment
 
+# TODO:
+"""
+1. board_detail에서 댓글을 달 수 있는 form 태그와 input tag 만들기
+
+2. form이 submit 되면 요청을 받을 url과 view function 만들기
+    - 1. form에 입력값이 빈 값이면, error를 담아서 html 보내기
+    - 2. form에 입력값이 타당하면, 저장하고 상세페이지 다시 보여주기
+     
+3. (2)에서 만들어진 url로 (1)의 form에 action 속성에 url기록하기.
+"""
+
 
 def index(request):
     board_list = Board.objects.prefetch_related('comment_set').all()
@@ -15,11 +26,46 @@ def index(request):
 
 
 def board_detail(request, board_id):
+    errors = []
+    if request.method == 'POST':
+        data = request.POST
+        content = data.get('comment')
+        if content:
+            comment = Comment(
+                content=content,
+                board_id=board_id
+            )
+            comment.save()
+        else:
+            errors.append("comment가 비어 있습니다.")
+
     board = Board.objects.get(pk=board_id)
 
     return render(request,
                   "board/detail.html",
-                  {'board': board})
+                  {'board': board, 'errors': errors})
+
+
+# def board_detail(request, board_id):
+
+#     board = Board.objects.get(pk=board_id)
+
+#     errors = []
+#     if request.method == 'POST':
+#         data = request.POST
+#         content = data.get('comment')
+#         if content:
+#             comment = Comment(
+#                 content=content,
+#                 board_id=board_id
+#             )
+#             comment.save()
+#         else:
+#             errors.append("comment가 비어 있습니다.")
+
+#     return render(request,
+#                   "board/detail.html",
+#                   {'board': board, 'errors': errors})
 
 
 def board_write(request):
