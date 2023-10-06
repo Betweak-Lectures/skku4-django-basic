@@ -1,3 +1,4 @@
+from django.http import Http404
 from .forms import CommentForm
 from .forms import BoardForm
 from django.urls import reverse
@@ -20,7 +21,7 @@ from .models import Board, Comment
 
 
 def index(request):
-    board_list = Board.objects.prefetch_related('comment_set').all()
+    board_list = Board.get_active_list().prefetch_related('comment_set').all()
 
     return render(request, "board/index.html",
                   {'board_list': board_list})
@@ -28,6 +29,9 @@ def index(request):
 
 def board_detail(request, board_id):
     board = Board.objects.get(pk=board_id)
+    if not (board and board.is_active):
+        return Http404("요청하신 페이지가 없습니다.")
+
     form = CommentForm()
 
     if request.method == 'POST':
@@ -81,10 +85,33 @@ def board_write(request):
 
 
 def board_edit(request, board_id):
-    form = BoardForm()
+    board = Board.objects.get(id=board_id)
+    form = BoardForm(initial={
+        'title': board.title,
+        'content': board.content,
+        'author': board.author
+    })
+    if request.method == 'POST':
+        form = BoardForm(request.POST)
+
+        if form.is_valid():
+            board.title = form.cleaned_data['title']
+            board.content = form.cleaned_data['content']
+            board.author = form.cleaned_data['author']
+            board.save()
+            return redirect(reverse('board:detail', kwargs={
+                'board_id': board_id
+            }))
     return render(request,
                   "board/edit.html",
                   {'form': form})
+
+
+def board_delete(request, board_id):
+    board = Board.objects.get(id=board_id)
+    board.is_delete = True
+    board.save()
+    return redirect(reverse('board:index'))
 
 
 # def board_write(request):

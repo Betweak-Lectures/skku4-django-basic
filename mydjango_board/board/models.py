@@ -15,8 +15,17 @@ class Board(models.Model):
         validators.MinLengthValidator(10, "최소 10글자 이상은 입력해주셔야 합니다."),
     ])  # Text
 
+    is_delete = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @classmethod
+    def get_active_list(cls):
+        return cls.objects.filter(is_delete=False)
+
+    @property
+    def is_active(self):
+        return not self.is_delete
 
 
 class Comment(models.Model):
